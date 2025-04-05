@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import HomeService from "../../api/HomeService";
-import AdminModal from "./AdminModal";
+import AdminProductModal from "./AdminProductModal";
+import ButtonBs from "../../components/ButtonComponent";
 
 const AdminProducts = () => {
     const [page, setPage] = useState(1);
     const [products, setProducts] = useState([]);
     const [selectedKey, setSelectedKey] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
 
     const isAllSelected = products.length > 0 && selectedKey.length === products.length;
 
     const fetchProducts = async (currentPage) => {
         const response = await HomeService.getAllProducts(currentPage);
         setProducts(response.products);
+        setTotalPages(Math.ceil(response.total / 10));
     }
 
     useEffect(() => {
@@ -44,6 +47,9 @@ const AdminProducts = () => {
             <h1>Product List</h1>
             {/* Action Buttons */}
             <header className="mb-3 d-flex gap-2">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#viewModal" className="btn btn-success" disabled={selectedKey.length !== 1}>
+                    View Product
+                </button>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#createModal" className="btn btn-success">
                     Create Product
                 </button>
@@ -91,24 +97,47 @@ const AdminProducts = () => {
                     )}
                 </tbody>
             </table>
+                    {/* Pagination Buttons */}
+        <div className="d-flex justify-content-between mt-3">
+            <ButtonBs onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
+                Previous
+            </ButtonBs>
+            <span className="text-sm font-medium">Page {page} of {totalPages - 1}</span>
+            <ButtonBs onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))} disabled={page === totalPages}>
+                Next
+            </ButtonBs>
+        </div>
             {/* Modals */}
-            <AdminModal
+            <AdminProductModal
+                id="viewModal"
+                modalTitle="View Product"
+                modalText="Are you sure you want to create a new product?"
+                onConfirm={() => console.log("Create product logic")}
+                type="viewProduct"
+                selectedKey={selectedKey}
+            />
+            <AdminProductModal
                 id="createModal"
                 modalTitle="Create Product"
                 modalText="Are you sure you want to create a new product?"
                 onConfirm={() => console.log("Create product logic")}
+                type="createProduct"
             />
-            <AdminModal
+            <AdminProductModal
                 id="updateModal"
                 modalTitle="Update Product"
                 modalText="Are you sure you want to update the selected product(s)?"
                 onConfirm={() => console.log("Update product logic")}
+                type="updateProduct"
+                selectedKey={selectedKey}
             />
-            <AdminModal
+            <AdminProductModal
                 id="deleteModal"
                 modalTitle="Delete Product"
                 modalText="Are you sure you want to delete the selected product(s)?"
                 onConfirm={() => console.log("Delete product logic")}
+                type="deleteProduct"
+                selectedKey={selectedKey}
             /> 
              
         </div>

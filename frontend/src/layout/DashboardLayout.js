@@ -32,7 +32,7 @@ const DashboardLayout = () => {
                                     <NavLink className="nav-link" to="/dashboard/home">Home</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/dashboard/profile">{user?.fullname || ""}</NavLink>
+                                    <NavLink className="nav-link" to={user?.isAdmin ? ("/dashboard/profile") : ("/dashboard/admin/products")}>{user?.fullname || ""}</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <button className="nav-link btn" onClick={handleLogout}>Logout</button>

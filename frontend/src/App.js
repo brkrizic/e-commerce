@@ -23,7 +23,7 @@ function App() {
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn) || localStorage.getItem('token');
 
-  const isAdmin = useSelector((state) => state.auth.user.isAdmin) || false;
+  //const isAdmin = useSelector((state) => state.auth.user.isAdmin) || false;
   const isAdminTest = true;
 
   const dispatch = useDispatch();
