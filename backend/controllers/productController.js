@@ -9,8 +9,9 @@ import asyncHandler from 'express-async-handler';
 // @access PRIVATE
 export const createProductCtrl = asyncHandler(async (req, res) => {
     const { name, description, category, price } = req.body;
+    const image = req.file ? req.file.filename : null;
 
-    if(!name || !description || !category || !price || !req.file){
+    if(!name || !description || !category || !price || !image){
         return res.json({
             success: false,
             message: "All fields including image are required",
@@ -126,40 +127,42 @@ export const getProductCtrl = asyncHandler(async (req, res) => {
 })
 
 // @desc Update product
-// @route POST /api/v1/products:id
+// @route POST /api/v1/products/:id
 // @access PRIVATE
 export const updateProductCtrl = asyncHandler(async (req, res) => {
-    const { name, description, category, images, price} = req.body;
+    const { name, description, category, price } = req.body;
+    const image = req.file ? req.file.filename : null;
 
-    const productId = await Product.findById(req.params.id);
-    console.log(req.params.id);
+    const updateFields = {
+        name,
+        description,
+        category,
+        price,
+    };
+
+    if(image){
+        updateFields.image = `/public/${req.file.filename}`;
+    }
 
     const updatedProduct = await Product.findByIdAndUpdate(
-        productId,
-        {
-            name,
-            description,
-            category,
-            images,
-            price,
-            user: req.userAuthId
-        },
+        req.params.id,
+        updateFields,
         { new: true, runValidators: true }
     );
 
-    if(!updatedProduct){
-        return res.json({
+    if (!updatedProduct) {
+        return res.status(404).json({
             success: false,
             message: "Product not found"
-        })
+        });
     }
 
-    return res.json({
+    return res.status(200).json({
         success: true,
         message: "Product updated successfully",
         updatedProduct
     });
-})
+});
 
 // @desc Delete product
 // @route DELETE /api/v1/products:id
@@ -176,23 +179,23 @@ export const deleteProductCtrl = asyncHandler(async (req, res) => {
 
     await Product.deleteOne({ _id: productId});
 
-    const updatedUser = await User.findByIdAndUpdate(
-        req.userAuthId,
-        {
-            $pull: { products: productId }
-        },
-        { new: true }
-    )
+    // const updatedUser = await User.findByIdAndUpdate(
+    //     req.userAuthId,
+    //     {
+    //         $pull: { products: productId }
+    //     },
+    //     { new: true }
+    // )
 
-    if(!updatedUser){
-        return res.json({
-            success: false,
-            message: "Failed to update user after deleting product"
-        })
-    }
+    // if(!updatedUser){
+    //     return res.json({
+    //         success: false,
+    //         message: "Failed to update user after deleting product"
+    //     })
+    // }
 
     return res.json({
         success: true,
-        message: "Product successfully deleted and user updated"
+        message: "Product successfully deleted"
     });
 })

@@ -10,7 +10,7 @@ const productRoutes = express.Router();
 productRoutes.post('/api/v1/products', upload.single("image"), createProductCtrl);
 productRoutes.get('/api/v1/products', getProductsCtrl);
 productRoutes.get('/api/v1/products/:id', getProductCtrl);
-productRoutes.put('/api/v1/products/:id', isLoggedIn, verifyIsAdmin, updateProductCtrl);
-productRoutes.delete('/api/v1/products/:id', isLoggedIn, verifyIsAdmin, deleteProductCtrl);
+productRoutes.put('/api/v1/products/:id', upload.single("image"), updateProductCtrl);
+productRoutes.delete('/api/v1/products/:id', deleteProductCtrl);
 
 export default productRoutes;

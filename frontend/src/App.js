@@ -17,7 +17,6 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminSettings from './pages/admin/AdminSettings';
 import PrivateAdminRoute from './routes/PrivateAdminRoute';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
 
