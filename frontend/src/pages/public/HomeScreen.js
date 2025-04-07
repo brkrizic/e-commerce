@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import HomeService from "../../api/HomeService";
+import HomeService from "../../api/PublicService";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TitleBs from "../../components/TitleComponent";
 import ButtonBs from "../../components/ButtonComponent";

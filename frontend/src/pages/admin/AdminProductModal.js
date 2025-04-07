@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef, useRef } from "react";
 import LabelInputBs from "../../components/LabelInputComponent";
-import HomeService from "../../api/HomeService";
+import HomeService from "../../api/PublicService";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Modal } from 'bootstrap';
@@ -223,7 +223,7 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
                                 />
                                 <img 
                                     src={selectedProduct?.image ? productImage(selectedProduct) : `http://localhost:3001/public/emptyImage.jpg`}  
-                                    alt={selectedProduct.name} 
+                                    alt={selectedProduct?.name} 
                                     className="w-20 h-20 object-cover rounded-md"
                                     style={{ height: 160, width: 210}}
                                 />                                

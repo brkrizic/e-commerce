@@ -11,6 +11,7 @@ export const verifyIsAdmin = async (req, res, next) => {
         const decodedUser = verifyToken(token);
 
         const user = await User.findById(decodedUser.id);
+        console.log(user);
 
         if (!user) {
             return res.status(404).json({ message: "User not found." });

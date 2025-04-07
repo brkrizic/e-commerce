@@ -3,9 +3,7 @@ import axios from "axios";
 const HomeService = {
     getAllProducts: async (page = 1, limit = 20) => {
         try {
-            const response = await axios.get(`http://localhost:3001/api/v1/products?page=${page}&limit=${limit}`, {
-                withCredentials: true
-            });
+            const response = await axios.get(`http://localhost:3001/api/v1/products?page=${page}&limit=${limit}`);
             if(response.data.success){
                 return response.data;
             } else {
@@ -17,9 +15,7 @@ const HomeService = {
     },
     getProductsByName: async (name) => {
         try {
-            const response = await axios.get(`http://localhost:3001/api/v1/products?name=${name}`, {
-                withCredentials: true
-            });
+            const response = await axios.get(`http://localhost:3001/api/v1/products?name=${name}`);
             if(response.data.success){
                 return response.data;
             } else {

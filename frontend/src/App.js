@@ -17,13 +17,14 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminSettings from './pages/admin/AdminSettings';
 import PrivateAdminRoute from './routes/PrivateAdminRoute';
+import AdminUsers from './pages/admin/AdminUsers';
 
 function App() {
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn) || localStorage.getItem('token');
 
-  //const isAdmin = useSelector((state) => state.auth.user.isAdmin) || false;
-  const isAdminTest = true;
+  const isAdmin = useSelector((state) => state?.auth?.user?.isAdmin) || false;
+  //const isAdminTest = true;
 
   const dispatch = useDispatch();
 
@@ -51,8 +52,9 @@ function App() {
                 <Route path="/dashboard/orders" element={<DashboardOrders />}/>
                 <Route path="/dashboard/settings" element={<DashboardSettings />}/>
 
-                <Route element={<PrivateAdminRoute isAdmin={isAdminTest}/>}>
+                <Route element={<PrivateAdminRoute isAdmin={isAdmin}/>}>
                   <Route path='/dashboard/admin/products' element={<AdminProducts />}></Route>
+                  <Route path='/dashboard/admin/users' element={<AdminUsers />}></Route>
                   <Route path='/dashboard/admin/orders' element={<AdminOrders />}></Route>
                   <Route path='/dashboard/admin/settings' element={<AdminSettings />}></Route>
                 </Route>

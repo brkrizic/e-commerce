@@ -47,7 +47,7 @@ const DashboardLayout = () => {
             <div className="d-flex">
                 <aside className="bg-dark text-white p-3 h-screen fixed top-0 left-0 flex flex-col items-start" style={{ width: '200px' }}>
 
-                    {user?.isAdmin ? (
+                    {!user?.isAdmin ? (
                         <div className="d-flex flex-column">
                             <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/profile")}>My Profile</button>
                             <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/products")}>My Products</button>
@@ -56,9 +56,10 @@ const DashboardLayout = () => {
                         </div> 
                     ) : (
                         <div className="d-flex flex-column">
-                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/products")}>Products</button>
-                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/orders")}>Orders</button>
-                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/settings")}>Settings</button>
+                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/products")}>Admin Content Management</button>
+                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/users")}>Admin User Management</button>
+                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/orders")}>Admin Order Management Features</button>
+                            <button className="btn btn-secondary mb-2" onClick={() => navigate("/dashboard/admin/settings")}>Admin App Settings</button>
                         </div> 
                     )}
                 </aside>

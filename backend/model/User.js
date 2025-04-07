@@ -2,33 +2,50 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const addressSchema = new mongoose.Schema({
+  fullName: String,
+  phone: String,
+  street: String,
+  city: String,
+  postalCode: String,
+  country: String,
+  isDefault: { type: Boolean, default: false }
+}, { _id: false });
+
 const UserSchema = new Schema({
     fullname:{
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minlength: 2
     },
     email:{
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true
     },
     password:{
         type: String,
-        required: true
+        required: true,
+        minlength: 6
     },
-    phoneNumber:{
-        type: String,
-        required: false
+    isVerified: {
+        type: Boolean,
+        default: false
     },
-    products:[
+    addresses: [addressSchema],
+    wishlist: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product' 
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+        }
     ],
-    conversations:[
+    orderHistory: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Conversation'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'
         }
     ],
     isAdmin:{

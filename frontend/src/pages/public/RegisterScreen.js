@@ -52,7 +52,7 @@ const RegisterScreen = () => {
                     inpType={"text"}
                     inpPlaceholder={"* John Doe"}
                     inpValue={data.fullname}
-                    inpName={"email"}
+                    inpName={"fullname"}
                     inpOnChange={handleChange}
                 />
                 <LabelInputBs 
@@ -68,7 +68,7 @@ const RegisterScreen = () => {
                     lblChild={"Password"} 
                     lblType={"password"}
                     inpType={"password"}
-                    inpPlaceholder={"* ***"}
+                    inpPlaceholder={"****"}
                     inpValue={data.password}
                     inpName={"password"}
                     inpOnChange={handleChange}

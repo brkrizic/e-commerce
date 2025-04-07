@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import HomeService from "../../api/HomeService";
+import HomeService from "../../api/PublicService";
 import AdminProductModal from "./AdminProductModal";
 import ButtonBs from "../../components/ButtonComponent";
 import { AdminService } from "../../api/AdminService";
