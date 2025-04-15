@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AdminService } from "../../api/AdminService";
 import ButtonBs from "../../components/ButtonComponent";
 import TableComponent from "../../components/TableComponent";
+import BsActionButton from "../../components/BsActionButton";
 
 const AdminUsers = () => {
     const [selectedKey, setSelectedKey] = useState([]);
@@ -45,21 +46,40 @@ const AdminUsers = () => {
             <h1>User List</h1>
             {/* Action Buttons */}
             <header className="mb-3 d-flex gap-2">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#viewModal" className="btn btn-success" disabled={selectedKey?.length !== 1}>
-                    View User
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#createModal" className="btn btn-success" disabled={selectedKey?.length !== 1}>
-                    Promote/Demote User
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#updateModal" className="btn btn-warning" disabled={selectedKey?.length !== 1}>
-                    Edit User
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#updateModal" className="btn btn-warning" disabled={selectedKey?.length !== 1}>
-                    Disable User
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" className="btn btn-danger" disabled={selectedKey?.length === 0}>
-                    Delete User
-                </button>
+                <BsActionButton
+                    label="View User"
+                    variant="success"
+                    dataBsTarget="#viewModal"
+                    disabled={selectedKey?.length !== 1}
+                />
+
+                <BsActionButton
+                    label="Promote/Demote User"
+                    variant="success"
+                    dataBsTarget="#createModal"
+                    disabled={selectedKey?.length !== 1}
+                />
+
+                <BsActionButton
+                    label="Edit User"
+                    variant="warning"
+                    dataBsTarget="#updateModal"
+                    disabled={selectedKey?.length !== 1}
+                />
+
+                <BsActionButton
+                    label="Disable User"
+                    variant="warning"
+                    dataBsTarget="#updateModal"
+                    disabled={selectedKey?.length !== 1}
+                />
+
+                <BsActionButton
+                    label="Delete User"
+                    variant="danger"
+                    dataBsTarget="#deleteModal"
+                    disabled={selectedKey?.length === 0}
+                />
             </header>
 
             <TableComponent

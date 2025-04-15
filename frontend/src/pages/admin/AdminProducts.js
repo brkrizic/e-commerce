@@ -8,6 +8,7 @@ import { NotificationComponent } from "../../components/NotificationComponent";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import TableComponent from "../../components/TableComponent";
+import BsActionButton from "../../components/BsActionButton";
 
 const AdminProducts = () => {
     const [page, setPage] = useState(1);
@@ -126,18 +127,29 @@ const AdminProducts = () => {
             <h1>Product List</h1>
             {/* Action Buttons */}
             <header className="mb-3 d-flex gap-2">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#viewModal" className="btn btn-success" disabled={selectedKey?.length !== 1}>
-                    View Product
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#createModal" className="btn btn-success">
-                    Create Product
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#updateModal" className="btn btn-warning" disabled={selectedKey?.length !== 1}>
-                    Update Product
-                </button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" className="btn btn-danger" disabled={selectedKey?.length === 0}>
-                    Delete Product
-                </button>
+                <BsActionButton
+                label="View Product"
+                variant="success"
+                dataBsTarget="#viewModal"
+                disabled={selectedKey?.length !== 1}
+                />
+                <BsActionButton
+                label="Create Product"
+                variant="success"
+                dataBsTarget="#createModal"
+                />
+                <BsActionButton
+                label="Update Product"
+                variant="warning"
+                dataBsTarget="#updateModal"
+                disabled={selectedKey?.length !== 1}
+                />
+                <BsActionButton
+                label="Delete Product"
+                variant="danger"
+                dataBsTarget="#deleteModal"
+                disabled={selectedKey?.length === 0}
+                />
             </header>
 
             <TableComponent
