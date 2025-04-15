@@ -18,6 +18,8 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminSettings from './pages/admin/AdminSettings';
 import PrivateAdminRoute from './routes/PrivateAdminRoute';
 import AdminUsers from './pages/admin/AdminUsers';
+import DashboardCart from './pages/DashboardCart';
+import ProductDetailScreen from './pages/public/ProductDetailScreen';
 
 function App() {
 
@@ -41,12 +43,15 @@ function App() {
               <Route index element={<HomeScreen />}></Route>
               <Route path="/login" element={<LoginScreen />}></Route>
               <Route path="/register" element={<RegisterScreen />}></Route>
+              <Route path="/product/:id" element={<ProductDetailScreen />}></Route>
             </Route>
 
             <Route element={<PrivateRoute isLoggedIn={isLoggedIn}/>}>
               <Route path="/dashboard" element={<DashboardLayout />}>         
                 <Route index element={<DashboardScreen />} />
-                <Route path="/dashboard/home" element={<HomeScreen />}/>
+                <Route path="/dashboard/home" element={<HomeScreen />}></Route>
+                <Route path="/dashboard/product/:id" element={<ProductDetailScreen />}></Route>
+                <Route path="/dashboard/cart" element={<DashboardCart />}/>
                 <Route path="/dashboard/profile" element={<DashboardProfile />}/>
                 <Route path="/dashboard/products" element={<DashboardProducts />}/>
                 <Route path="/dashboard/orders" element={<DashboardOrders />}/>

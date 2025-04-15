@@ -61,8 +61,6 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
         // user: updatedUser
     })
 });
-
-
 // @desc Get all products
 // @route GET /api/v1/products
 // @access PUBLIC

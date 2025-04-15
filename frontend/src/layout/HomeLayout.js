@@ -30,6 +30,11 @@ const HomeLayout = () => {
                     Register
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink to="/login" className="nav-link">
+                    Cart
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>

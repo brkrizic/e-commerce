@@ -180,10 +180,16 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
                                     inpValue={price}
                                     inpOnChange={(e) => setPrice(e.target.value)}
                                 />
+                                <img 
+                                    src={selectedProduct?.image ? productImage(selectedProduct) : `http://localhost:3001/public/emptyImage.jpg`}  
+                                    alt={selectedProduct?.name} 
+                                    className="w-20 h-20 object-cover rounded-md"
+                                    style={{ height: 160, width: 210}}
+                                /> 
                                 
                                 {/* File Upload */}
                                 <div className="mb-3">
-                                    <label htmlFor="formFile" className="form-label">Upload Image</label>
+                                    <label htmlFor="formFile" className="form-label">Replace Image</label>
                                     <input className="form-control" type="file" id="formFile" onChange={handleImageChange}/>
                                 </div>
 
