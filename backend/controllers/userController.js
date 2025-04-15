@@ -165,3 +165,65 @@ export const getUserProfileCtrl = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+// @desc Get all users
+// @route GET /api/v1/users
+// @access ADMIN
+export const getAllUsersCtrl = asyncHandler(async (req, res) => {
+    const users = await User.find();
+
+    return res.json({
+        success: true,
+        users
+    })
+})
+
+// @ Get User By Id
+// @route GET /api/v1/users/:id
+// @access ADMIN
+export const getUserByIdCtrl = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+
+    if(!userId){
+        return res.json({
+            success: false,
+            message: "User ID is missing"
+        })
+    }
+
+    const user = await User.findById(userId);
+
+    if(!user) {
+        return res.json({
+            success: false,
+            message: "User not found"
+        })
+    }
+
+    return res.json({
+        success: true,
+        message: "User fetched successfully",
+        user
+    })
+})
+
+// @ Delete User
+// @route DELETE /api/v1/users/:id
+// @access ADMIN
+export const deleteUserCtrl = asyncHandler(async(req, res) => {
+    const userId = req.params.id;
+
+    if(!userId){
+        return res.json({
+            success: false,
+            message: "User ID is missing"
+        })
+    }
+
+    await User.deleteOne({ _id: userId});
+
+    return res.json({
+        success: true,
+        message: "User deleted successfully"
+    })
+})

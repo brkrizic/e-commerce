@@ -30,6 +30,18 @@ export const AdminService = {
         try {
             const response = await axios.delete(`http://localhost:3001/api/v1/products/${id}`, { withCredentials: true });
             if(response.status === 200){
+                return response.data;
+            } else {
+                console.error("Failed to fetch products");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getAllUsers: async () => {
+        try {
+            const response = await axios.get(`http://localhost:3001/api/v1/users`, { withCredentials: true });
+            if(response.status === 200){
                 console.log(response);
                 return response.data;
             } else {

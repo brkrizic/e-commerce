@@ -65,6 +65,15 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
         }
     }, [selectedKey]);
 
+    useEffect(() => {
+        if (selectedProduct) {
+            setName(selectedProduct.name || '');
+            setDescription(selectedProduct.description || '');
+            setCategory(selectedProduct.category || '');
+            setPrice(selectedProduct.price || '');
+        }
+    }, [selectedProduct]);
+
     const fetchSelectedProduct = async () => {
         try {
             const response = await HomeService.getProductById(selectedKey[0]);
@@ -98,7 +107,7 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
         if (type === "createProduct") {
             onCreate(formData);  // Pass formData to onCreate handler
         } else if (type === "updateProduct" && selectedProduct) {
-            onUpdate(formData);  // Pass formData to onUpdate handler
+            onUpdate({...selectedProduct, name, description, category, price, image: imageFile}, selectedProduct?._id);  // Pass formData to onUpdate handler
         }
         closeModal();
     };
@@ -141,7 +150,7 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
                                     inpType={"text"}
                                     inpId={"name"}
                                     inpPlaceholder={"Name"}
-                                    inpValue={name || selectedProduct?.name}
+                                    inpValue={name}
                                     inpOnChange={(e) => setName(e.target.value)}
                                 />
                                 <LabelInputBs 
@@ -150,7 +159,7 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
                                     inpType={"text"}
                                     inpId={"description"}
                                     inpPlaceholder={"Description"}
-                                    inpValue={description || selectedProduct?.description}
+                                    inpValue={description}
                                     inpOnChange={(e) => setDescription(e.target.value)}
                                 />
                                 <LabelInputBs 
@@ -159,7 +168,7 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
                                     inpType={"text"}
                                     inpId={"category"}
                                     inpPlaceholder={"Category"}
-                                    inpValue={category || selectedProduct?.category}
+                                    inpValue={category}
                                     inpOnChange={(e) => setCategory(e.target.value)}
                                 />
                                 <LabelInputBs 
@@ -168,7 +177,7 @@ const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selecte
                                     inpType={"number"}
                                     inpId={"price"}
                                     inpPlaceholder={"Price"}
-                                    inpValue={price || selectedProduct?.price}
+                                    inpValue={price}
                                     inpOnChange={(e) => setPrice(e.target.value)}
                                 />
                                 

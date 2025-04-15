@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 import { NotificationComponent } from "../../components/NotificationComponent";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import TableComponent from "../../components/TableComponent";
 
 const AdminProducts = () => {
     const [page, setPage] = useState(1);
@@ -51,10 +52,10 @@ const AdminProducts = () => {
         }
      };
 
-    const handleUpdateProduct = async (formData) => {
+    const handleUpdateProduct = async (selectedProduct, id) => {
 
         try {
-            const response = await AdminService.createProduct(formData);
+            const response = await AdminService.updateProduct(selectedProduct, id);
             if (response?.success) {
                 setNotification({
                     message: response.message,
@@ -139,42 +140,22 @@ const AdminProducts = () => {
                 </button>
             </header>
 
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                    <th scope="col"><input type="checkbox" checked={isAllSelected} onChange={toggleSelectAll}></input></th>
-                    <th scope="col">#</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Created at</th>
-                    <th scope="col">Updated at</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.length > 0 ? (
-                        products.map((product, index) => (
-                            <tr key={product._id || index}>
-                                <th><input type="checkbox" checked={selectedKey.includes(product._id)} onChange={() => toggleSelectedKey(product._id)}></input></th>
-                                <th scope="row">{index + 1}</th>
-                                <td>{product._id}</td>
-                                <td>{product.name}</td>
-                                <td>{product.description}</td>
-                                <td>{product.category}</td>
-                                <td>${product.price.toFixed(2)}</td>
-                                <td>{new Date(product.createdAt).toLocaleString()}</td>
-                                <td>{new Date(product.updatedAt).toLocaleString()}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="8" className="text-center">No products found.</td>
-                        </tr> 
-                    )}
-                </tbody>
-            </table>
+            <TableComponent
+                data={products}
+                columns={[
+                    { label: "#", key: "index", format: (_, row, i) => i + 1 },
+                    { label: "ID", key: "_id" },
+                    { label: "Name", key: "name" },
+                    { label: "Description", key: "description" },
+                    { label: "Category", key: "category" },
+                    { label: "Price", key: "price", format: (val) => `$${val?.toFixed(2)}` },
+                    { label: "Created At", key: "createdAt", format: (val) => new Date(val).toLocaleString() },
+                    { label: "Updated At", key: "updatedAt", format: (val) => new Date(val).toLocaleString() },
+                ]}
+                selectedKey={selectedKey}
+                onSelect={toggleSelectedKey}
+                onSelectAll={toggleSelectAll}
+            />
                     {/* Pagination Buttons */}
         <div className="d-flex justify-content-between mt-3">
             <ButtonBs onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
