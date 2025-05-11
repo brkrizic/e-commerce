@@ -1,9 +1,18 @@
 import express from 'express';
 import { getUserProfileCtrl, loginUserCtrl, registerUserCtrl, logoutUserCtrl, getUserByIdCtrl, getAllUsersCtrl, deleteUserCtrl } from '../controllers/userController.js';
 import { isLoggedIn } from '../middlewares/isLoggedIn.js';
+import { createXmlUser, deleteXmlUser, getAllXmlUsers, getXmlUserById, updateXmlUser } from '../controllers/xml/usersXmlController.js';
 
 const userRoutes = express.Router();
 
+//XML
+userRoutes.post('/xml-users', createXmlUser);
+userRoutes.get('/xml-users', getAllXmlUsers);
+userRoutes.get('/xml-users/:id', getXmlUserById);
+userRoutes.put('/xml-users/:id', updateXmlUser);
+userRoutes.delete('/xml-users/:id', deleteXmlUser);
+
+//MongoDB
 userRoutes.post('/register', registerUserCtrl);
 userRoutes.post('/login', loginUserCtrl);
 userRoutes.post('/logout', isLoggedIn, logoutUserCtrl);

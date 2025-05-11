@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { BrowserRouter, HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router';
 import LoginScreen from './pages/public/LoginScreen';
 import HomeScreen from './pages/public/HomeScreen';
@@ -30,7 +30,7 @@ function App() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(checkAuthStatus());
   }, [dispatch]);
 

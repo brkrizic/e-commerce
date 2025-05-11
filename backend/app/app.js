@@ -10,6 +10,7 @@ import categoryRoutes from '../routes/categoryRoute.js';
 import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
+import orderRoutes from '../routes/orderRoute.js';
 
 dbConnect();
 const app = express();
@@ -46,6 +47,7 @@ app.use('/api/v1/users', userRoutes);
 app.use(productRoutes);
 app.use(conversationRoute);
 app.use(categoryRoutes);
+app.use('/api/v1/orders', orderRoutes);
 
 app.use(notFound);
 app.use(globalErrorHandler);

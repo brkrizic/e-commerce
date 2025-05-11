@@ -3,21 +3,19 @@ import { AdminService } from "../../api/AdminService";
 import ButtonBs from "../../components/ButtonComponent";
 import TableComponent from "../../components/TableComponent";
 import BsActionButton from "../../components/BsActionButton";
+import useUserApi from "../../hooks/useUserApi";
 
 const AdminUsers = () => {
     const [selectedKey, setSelectedKey] = useState([]);
-    const [page, setPage] = useState(1);
+    const { getAllUsers, getUserById, updateUser, deleteUser } = useUserApi();
 
     const [users, setUsers] = useState([]);
 
     const isAllSelected = users.length > 0 && selectedKey.length === users.length;
 
     const fetchUsers = async () => {
-        const response = await AdminService.getAllUsers();
-
-        console.log(response)
-
-        setUsers(response.users);
+        const result = await getAllUsers();
+        setUsers(result.users);
     };
 
     useEffect(() => {
@@ -94,6 +92,7 @@ const AdminUsers = () => {
                     { label: "Email", key: "email" },
                     { label: "Role", key: "role" },
                     { label: "isVerified", key: "isVerified", format: (val) => val ? "✅" : "❌" },
+                    { label: "isAdmin", key: "isAdmin", format: (val) => val ? "✅" : "❌" },
                     { label: "Wishlist", key: "whishlist", format: (val) => val?.length || 0 },
                     { label: "Order History", key: "orderHistory", format: (val) => val?.length || 0 },
                     {

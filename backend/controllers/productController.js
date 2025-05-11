@@ -2,7 +2,8 @@ import Category from '../model/Category.js';
 import Product from '../model/Product.js';
 import User from '../model/User.js';
 import asyncHandler from 'express-async-handler';
-
+import fs from 'fs';
+import path from 'path';
 
 // @desc Create new product
 // @route POST /api/v1/products
@@ -56,7 +57,7 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
 
     return res.json({
         success: true,
-        message: 'Item successfully created!',
+        message: 'Product successfully created and saved to Database and JSON!',
         newProduct
         // user: updatedUser
     })
@@ -65,9 +66,11 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
 // @route GET /api/v1/products
 // @access PUBLIC
 export const getProductsCtrl = asyncHandler(async (req, res) => {
-    const { name, price, page = 1, limit = 10 } = req.query;
+    const { name, price, page = 1, limit = 10, sortBy = "name", order = "asc" } = req.query;
 
     let query = {}; // Store filters
+
+    const sortOrder = order === "desc" ? -1 : 1;
 
     // 🔹 Search by name (case-insensitive)
     if (name) {
@@ -90,7 +93,13 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
     const total = await Product.countDocuments(query);
 
     // 🔹 Fetch filtered products with pagination
-    const products = await Product.find(query).skip(startIndex).limit(limitNum);
+    const products = await Product.find(query).sort({ [sortBy]: sortOrder }).skip(startIndex).limit(limitNum);
+
+    // // Add calculated field (discountedPrice)
+    // const enrichedProducts = products.map(product => ({
+    // ...product,
+    // discountedPrice: product.price - product.price * 0.1
+    // }));
 
     // 🔹 Calculate next/prev pages
     const hasNextPage = endIndex < total;
@@ -103,7 +112,7 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
         limit: limitNum,
         hasNextPage,
         hasPrevPage,
-        products,
+        products
     });
 });
 

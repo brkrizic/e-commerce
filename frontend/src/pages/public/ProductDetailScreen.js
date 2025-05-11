@@ -1,35 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import HomeService from '../../api/PublicService';
 
 const ProductDetailScreen = () => {
-    const [selectedImage, setSelectedImage] = useState("https://via.placeholder.com/500");
+    const productObj = useParams();
+
+    const [selectedImage, setSelectedImage] = useState("");
     const [quantity, setQuantity] = useState(1);
+    const [product, setProduct] = useState();
 
     const navigate = useNavigate();
 
-    const handleGoBack = () => navigate(-1); 
+    const handleGoBack = () => navigate(-1);
+    
+    const fetchData = async () => {
+        const projectId = productObj.id;
 
-    const product = {
-        id: 1,
-        name: "Premium Wireless Headphones",
-        description: "High-quality wireless headphones with noise cancellation and 30-hour battery life.",
-        price: 199.99,
-        stock: 12,
-        category: "Electronics",
-        images: [
-            "https://via.placeholder.com/500",
-            "https://via.placeholder.com/100x100?text=Side",
-            "https://via.placeholder.com/100x100?text=Back",
-            "https://via.placeholder.com/100x100?text=In-Use",
-        ]
-    };
+        const data = await HomeService.getProductById(projectId);
+        console.log(data);
+        setProduct(data?.product);
+        setSelectedImage(data?.product?.image)
+    }
 
-    const relatedProducts = [
-        { id: 2, name: "Smartwatch", price: 99.99, image: "https://via.placeholder.com/150" },
-        { id: 3, name: "Bluetooth Speaker", price: 49.99, image: "https://via.placeholder.com/150" },
-        { id: 4, name: "Noise-Canceling Earbuds", price: 149.99, image: "https://via.placeholder.com/150" },
-    ];
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    // const product = {
+    //     id: 1,
+    //     name: "Premium Wireless Headphones",
+    //     description: "High-quality wireless headphones with noise cancellation and 30-hour battery life.",
+    //     price: 199.99,
+    //     stock: 12,
+    //     category: "Electronics",
+    //     images: [
+    //         "https://via.placeholder.com/500",
+    //         "https://via.placeholder.com/100x100?text=Side",
+    //         "https://via.placeholder.com/100x100?text=Back",
+    //         "https://via.placeholder.com/100x100?text=In-Use",
+    //     ]
+    // };
+
+    // const relatedProducts = [
+    //     { id: 2, name: "Smartwatch", price: 99.99, image: "https://via.placeholder.com/150" },
+    //     { id: 3, name: "Bluetooth Speaker", price: 49.99, image: "https://via.placeholder.com/150" },
+    //     { id: 4, name: "Noise-Canceling Earbuds", price: 149.99, image: "https://via.placeholder.com/150" },
+    // ];
 
     const handleAddToCart = () => {
         alert(`Added ${quantity} x "${product.name}" to cart.`);
@@ -38,14 +55,14 @@ const ProductDetailScreen = () => {
     return (
         <div className="container py-5">
             <button className="btn btn-outline-secondary mb-3" onClick={handleGoBack}>
-        ← Go Back
-    </button>
+                ← Go Back
+            </button>
             <div className="row">
                 {/* Image Section */}
                 <div className="col-md-6">
                     <img src={selectedImage} alt="Product" className="img-fluid rounded shadow-sm mb-3" />
                     <div className="d-flex gap-2">
-                        {product.images.map((img, index) => (
+                        {/* {product.images.map((img, index) => (
                             <img
                                 key={index}
                                 src={img}
@@ -55,19 +72,19 @@ const ProductDetailScreen = () => {
                                 role="button"
                                 onClick={() => setSelectedImage(img)}
                             />
-                        ))}
+                        ))} */}
                     </div>
                 </div>
 
                 {/* Product Info */}
                 <div className="col-md-6">
-                    <h2>{product.name}</h2>
-                    <p className="text-muted">{product.category}</p>
-                    <h4 className="text-primary">${product.price.toFixed(2)}</h4>
-                    <p>{product.description}</p>
-                    <p className={product.stock > 0 ? "text-success" : "text-danger"}>
-                        {product.stock > 0 ? `In Stock (${product.stock})` : "Out of Stock"}
-                    </p>
+                    <h2>{product?.name}</h2>
+                    <p className="text-muted">{product?.category}</p>
+                    <h4 className="text-primary">${product?.price.toFixed(2)}</h4>
+                    <p>{product?.description}</p>
+                    {/* <p className={(product?.stock > 0 ? "text-success" : "text-danger") || ""}>
+                        {product.stock > 0 ? `In Stock (${product?.stock || ""})` : "Out of Stock"}
+                    </p> */}
 
                     {/* Quantity + Add to Cart */}
                     <div className="d-flex align-items-center gap-2 my-3">
@@ -77,14 +94,14 @@ const ProductDetailScreen = () => {
                             type="number"
                             className="form-control w-auto"
                             min="1"
-                            max={product.stock}
+                            max={product?.stock}
                             value={quantity}
-                            onChange={(e) => setQuantity(Math.min(Math.max(1, e.target.value), product.stock))}
+                            onChange={(e) => setQuantity(Math.min(Math.max(1, e.target.value), product?.stock) || "")}
                         />
                         <button
                             className="btn btn-success"
                             onClick={handleAddToCart}
-                            disabled={product.stock < 1}
+                            disabled={(product?.stock < 1) || ""}
                         >
                             Add to Cart
                         </button>
@@ -93,7 +110,7 @@ const ProductDetailScreen = () => {
             </div>
 
             {/* Related Products */}
-            <div className="mt-5">
+            {/* <div className="mt-5">
                 <h4>Related Products</h4>
                 <div className="row">
                     {relatedProducts.map(item => (
@@ -111,7 +128,7 @@ const ProductDetailScreen = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

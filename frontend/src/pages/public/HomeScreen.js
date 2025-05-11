@@ -84,9 +84,9 @@ const HomeScreen = () => {
             {/* Products List */}
             <ul className="grid grid-cols-1 gap-4 place-items-center">
                 {products.length > 0 ? (
-                    products.map((product, index) => (
+                    products.map((product, key) => (
                         <button
-                            key={product._id || `${product.name}-${index}`}
+                            key={product._id || `${product.name}-${key}`}
                             className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition w-80 h-24"
                             onClick={() => handleProductClick(product._id)}
                         >
