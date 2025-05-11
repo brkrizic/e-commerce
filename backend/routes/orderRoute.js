@@ -1,7 +1,9 @@
 import express from 'express';
-import { createOrder, deleteOrder, getOrderById, getOrders, updateOrderStatus } from '../controllers/orderController.js';
+import { createOrder, deleteOrder, downloadOrderPdf, getOrderById, getOrders, updateOrderStatus } from '../controllers/orderController.js';
 
 const orderRoutes = express.Router();
+
+orderRoutes.get('/download-invoice/:orderNumber', downloadOrderPdf);
 
 orderRoutes.post('/', createOrder);
 orderRoutes.get('/', getOrders);

@@ -47,6 +47,40 @@ const generateInvoicePdf = (order, filePath) => {
   doc.end();
 };
 
+//🔹 Download order
+export const downloadOrderPdf = asyncHandler(async(req, res) => {
+  const { orderNumber } = req.params;
+
+  const order = await Order.findOne({ orderNumber });
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
+  //const rawOrderNumber = orderNumber.replace('ORD-', '');
+
+  //console.log(orderNumber);
+
+  const fileName = `${orderNumber}.pdf`;
+  const filePath = path.join('invoices', fileName);
+
+  console.log(filePath);
+
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    res.status(404);
+    throw new Error('Invoice file not found');
+  }
+
+  res.download(filePath, fileName, (err) => {
+    if(err){
+      res.status(500).json({
+        message: 'Failed to download Invoice'
+      });
+    }
+  })
+});
+
 // 🔹 Create new order
 export const createOrder = asyncHandler(async (req, res) => {
   const order = new Order(req.body);
