@@ -52,6 +52,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isSigner: {
+        type: Boolean,
+        default: false
+    }
 }, 
 {
     timestamps: true

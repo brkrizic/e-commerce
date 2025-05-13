@@ -127,6 +127,10 @@ const orderSchema = new mongoose.Schema(
         type: Date,
         default: Date.now
       }
+    }],
+    signatures: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Signature"
     }]
   },
   { timestamps: true }

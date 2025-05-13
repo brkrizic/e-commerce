@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import HomeService from "../../api/PublicService";
-import AdminProductModal from "./AdminProductModal";
+import AdminProductModal from "./modals/AdminProductModal";
 import ButtonBs from "../../components/ButtonComponent";
 import { AdminService } from "../../api/AdminService";
 import { AxiosError } from "axios";
@@ -22,7 +22,6 @@ const AdminProducts = () => {
     const [price, setPrice] = useState('');
     const [imageFile, setImageFile] = useState('');
     const [notification, setNotification] = useState(null);
-
 
     const isAllSelected = products.length > 0 && selectedKey.length === products.length;
 

@@ -5,13 +5,15 @@ import TableComponent from "../../components/TableComponent";
 import BsActionButton from "../../components/BsActionButton";
 import useUserApi from "../../hooks/useUserApi";
 
-const AdminUsers = () => {
+const AdminUsers = (props) => {
     const [selectedKey, setSelectedKey] = useState([]);
     const { getAllUsers, getUserById, updateUser, deleteUser } = useUserApi();
 
     const [users, setUsers] = useState([]);
 
     const isAllSelected = users.length > 0 && selectedKey.length === users.length;
+
+    const isSigner = props.isSigner;
 
     const fetchUsers = async () => {
         const result = await getAllUsers();
@@ -51,12 +53,14 @@ const AdminUsers = () => {
                     disabled={selectedKey?.length !== 1}
                 />
 
-                <BsActionButton
-                    label="Promote/Demote User"
-                    variant="success"
-                    dataBsTarget="#createModal"
-                    disabled={selectedKey?.length !== 1}
-                />
+                {isSigner && (
+                    <BsActionButton
+                        label="Promote/Demote User"
+                        variant="success"
+                        dataBsTarget="#createModal"
+                        disabled={selectedKey?.length !== 1}
+                    />
+                )}
 
                 <BsActionButton
                     label="Edit User"

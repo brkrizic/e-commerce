@@ -1,10 +1,10 @@
 import React, { useEffect, useState, forwardRef, useRef } from "react";
-import LabelInputBs from "../../components/LabelInputComponent";
-import HomeService from "../../api/PublicService";
+import LabelInputBs from "../../../components/LabelInputComponent";
+import HomeService from "../../../api/PublicService";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Modal } from 'bootstrap';
-import { productImage } from "../../components/constants/imageUrl";
+import { productImage } from "../../../components/constants/imageUrl";
 
 const AdminProductModal = ({ id, modalTitle, modalText, onConfirm, type, selectedKey, onCreate, onUpdate, onDelete, ...props }) => {
     const [name, setName] = useState(props.name || '');

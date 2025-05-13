@@ -26,6 +26,7 @@ function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn) || localStorage.getItem('token');
 
   const isAdmin = useSelector((state) => state?.auth?.user?.isAdmin) || false;
+  const isSigner = useSelector((state) => state?.auth?.user?.isSigner) || false;
   //const isAdminTest = true;
 
   const dispatch = useDispatch();
@@ -58,8 +59,8 @@ function App() {
                 <Route path="/dashboard/settings" element={<DashboardSettings />}/>
 
                 <Route element={<PrivateAdminRoute isAdmin={isAdmin}/>}>
-                  <Route path='/dashboard/admin/products' element={<AdminProducts />}></Route>
-                  <Route path='/dashboard/admin/users' element={<AdminUsers />}></Route>
+                  <Route path='/dashboard/admin/products' element={<AdminProducts/>}></Route>
+                  <Route path='/dashboard/admin/users' element={<AdminUsers isSigner={isSigner}/>}></Route>
                   <Route path='/dashboard/admin/orders' element={<AdminOrders />}></Route>
                   <Route path='/dashboard/admin/settings' element={<AdminSettings />}></Route>
                 </Route>

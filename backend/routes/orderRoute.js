@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrder, deleteOrder, downloadOrderPdf, getOrderById, getOrders, updateOrderStatus } from '../controllers/orderController.js';
+import { createOrder, deleteOrder, downloadOrderPdf, getOrderById, getOrders, signOrder, updateOrderStatus } from '../controllers/orderController.js';
 
 const orderRoutes = express.Router();
 
@@ -10,5 +10,6 @@ orderRoutes.get('/', getOrders);
 orderRoutes.get('/:id', getOrderById);
 orderRoutes.put('/:id/status', updateOrderStatus);
 orderRoutes.delete('/:id', deleteOrder);
+orderRoutes.put('/sign-order/:orderNumber', signOrder);
 
 export default orderRoutes;

@@ -3,49 +3,8 @@ import Order from '../model/Order.js';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
+import { generateInvoicePdf } from '../utils/generateInvoicePdf.js';
 
-
-const generateInvoicePdf = (order, filePath) => {
-  const doc = new PDFDocument();
-  doc.pipe(fs.createWriteStream(filePath));
-
-  doc.fontSize(20).text(`Invoice: ${order.orderNumber}`, { align: 'center' });
-  doc.moveDown();
-
-  doc.fontSize(12).text(`User ID: ${order.userId}`);
-  doc.text(`Status: ${order.status}`);
-  doc.text(`Payment Status: ${order.paymentStatus}`);
-  doc.text(`Payment Method: ${order.paymentMethod}`);
-  doc.text(`Shipping Method: ${order.shippingMethod}`);
-  doc.text(`Total Price: $${order.totalPrice}`);
-  doc.text(`Shipping Cost: $${order.shippingCost}`);
-  doc.moveDown();
-
-  doc.text('Shipping Address:');
-  doc.text(`${order.shippingAddress.street}, ${order.shippingAddress.city}`);
-  doc.text(`${order.shippingAddress.state}, ${order.shippingAddress.zipCode}, ${order.shippingAddress.country}`);
-  doc.moveDown();
-
-  doc.fontSize(14).text('Items:');
-  order.items.forEach((item, i) => {
-    doc.fontSize(12).text(
-      `${i + 1}. Product ID: ${item.productId} | Qty: ${item.quantity} | Price: $${item.price} | Total: $${item.totalPrice}`
-    );
-  });
-
-  doc.moveDown();
-  doc.text(`Discount: $${order.discount || 0}`);
-  if (order.promoCode) {
-    doc.text(`Promo Code: ${order.promoCode}`);
-  }
-
-  doc.moveDown();
-  doc.text(`Transaction ID: ${order.paymentInfo.transactionId}`);
-  doc.text(`Amount Paid: $${order.paymentInfo.amountPaid}`);
-  doc.text(`Payment Date: ${new Date(order.paymentInfo.paymentDate).toLocaleDateString()}`);
-
-  doc.end();
-};
 
 //🔹 Download order
 export const downloadOrderPdf = asyncHandler(async(req, res) => {
@@ -80,6 +39,44 @@ export const downloadOrderPdf = asyncHandler(async(req, res) => {
     }
   })
 });
+
+//🔹 Sign order
+export const signOrder = async (req, res) => {
+  try {
+    const { orderNumber } = req.params;
+
+    // 1. Find order
+    const order = await Order.findOne({ orderNumber });
+    console.log(order);
+    if (!order) return res.status(404).json({ error: "Order not found" });
+
+    // 2. Check for invoice file
+    const invoicePath = path.join(__dirname, `../invoices/${orderNumber}.pdf`);
+    if (!fs.existsSync(invoicePath)) {
+      return res.status(404).json({ error: "Invoice PDF not found" });
+    }
+
+    // 3. Sign PDF (mock function or real signing process)
+    const signedPdfPath = path.join(__dirname, `../invoices/${orderNumber}-signed.pdf`);
+    await signPDF(invoicePath, signedPdfPath); // <-- you'd implement or import this
+
+    console.log(req.user);
+
+    // 4. Update DB with signature metadata
+    order.signature = {
+      signed: true,
+      signedAt: new Date(),
+      signedBy: req.user.email, // assuming you have auth middleware
+      signatureHash: generateHash(signedPdfPath) // optional: SHA-256 or similar
+    };
+    await order.save();
+
+    return res.json({ message: "Invoice signed", signedInvoice: `/invoices/${orderNumber}-signed.pdf` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 // 🔹 Create new order
 export const createOrder = asyncHandler(async (req, res) => {

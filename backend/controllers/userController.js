@@ -5,6 +5,7 @@ import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/generateToken.js';
 import { getTokenFromHeader } from '../utils/getTokenFromHeader.js';
 import { verifyToken } from '../utils/verifyToken.js';
+import { logUserActivity } from '../utils/logUserActivity.js';
 
 const pepper = process.env.PEPPER;
 
@@ -67,14 +68,15 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
 
     try {
         const existingEmail = await User.findOne({ email });
-        const comparedPassword = await bcrypt.compare(password + pepper, existingEmail.password);
-        
+
         if(!existingEmail){
             return res.status(400).json({
                 success: false,
                 message: 'User does not exist!'
             });
         }
+        
+        const comparedPassword = await bcrypt.compare(password + pepper, existingEmail.password);
 
         if(!comparedPassword){
             return res.status(400).json({
@@ -82,6 +84,9 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
                 message: 'Invalid credentials'
             });
         }
+
+        await logUserActivity('user_login', existingEmail?.id, 'success', { ip: req.ip, device: req.get('User-Agent')});
+
         const token = generateToken(existingEmail?.id);
 
         res.cookie('authToken', token, { 
@@ -227,3 +232,38 @@ export const deleteUserCtrl = asyncHandler(async(req, res) => {
         message: "User deleted successfully"
     })
 })
+
+// @ Promote User
+// @ route PUT /api/v1/users/promote
+// @ access ADMIN & SIGNER
+export const promoteUserCtrl = asyncHandler(async(req, res) => {
+    const userId = req.params.id;
+    const { isSigner } = req.body;
+    
+    const user = await User.findById(userId);
+
+    if(!user){
+        res.status(404);
+        throw new Error("User not found");
+    }
+    
+    if(!user.isAdmin){
+        res.status(403);
+        throw new Error("User is not admin");
+    }
+
+    if(user.isSigner){
+        res.status(400);
+        throw new Error("User is already signer");
+    }
+
+    user.isSigner = isSigner;
+    await User.save();
+
+    res.status(200).json({
+        success: true,
+        message: "User promoted to signer successfully",
+        user
+    });
+
+});

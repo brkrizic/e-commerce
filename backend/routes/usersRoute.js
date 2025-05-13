@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProfileCtrl, loginUserCtrl, registerUserCtrl, logoutUserCtrl, getUserByIdCtrl, getAllUsersCtrl, deleteUserCtrl } from '../controllers/userController.js';
+import { getUserProfileCtrl, loginUserCtrl, registerUserCtrl, logoutUserCtrl, getUserByIdCtrl, getAllUsersCtrl, deleteUserCtrl, promoteUserCtrl } from '../controllers/userController.js';
 import { isLoggedIn } from '../middlewares/isLoggedIn.js';
 import { createXmlUser, deleteXmlUser, getAllXmlUsers, getXmlUserById, updateXmlUser } from '../controllers/xml/usersXmlController.js';
 
@@ -20,5 +20,7 @@ userRoutes.get('/profile', isLoggedIn, getUserProfileCtrl);
 userRoutes.get('/', getAllUsersCtrl);
 userRoutes.get('/:id', getUserByIdCtrl);
 userRoutes.delete('/:id', deleteUserCtrl);
+
+userRoutes.put('/promote/:id', promoteUserCtrl);
 
 export default userRoutes;
