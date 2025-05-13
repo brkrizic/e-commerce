@@ -20,6 +20,7 @@ import PrivateAdminRoute from './routes/PrivateAdminRoute';
 import AdminUsers from './pages/admin/AdminUsers';
 import DashboardCart from './pages/DashboardCart';
 import ProductDetailScreen from './pages/public/ProductDetailScreen';
+import AdminOrdersDetails from './pages/admin/AdminOrdersDetails';
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
                   <Route path='/dashboard/admin/products' element={<AdminProducts/>}></Route>
                   <Route path='/dashboard/admin/users' element={<AdminUsers isSigner={isSigner}/>}></Route>
                   <Route path='/dashboard/admin/orders' element={<AdminOrders />}></Route>
+                  <Route path='/dashboard/admin/order/:id' element={<AdminOrdersDetails />}></Route>
                   <Route path='/dashboard/admin/settings' element={<AdminSettings />}></Route>
                 </Route>
               </Route>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate, useParams } from 'react-router';
 import HomeService from '../../api/PublicService';
+import { productImage } from '../../components/constants/imageUrl';
 
 const ProductDetailScreen = () => {
     const productObj = useParams();
@@ -24,6 +25,8 @@ const ProductDetailScreen = () => {
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+
         fetchData();
     }, []);
 
@@ -60,7 +63,7 @@ const ProductDetailScreen = () => {
             <div className="row">
                 {/* Image Section */}
                 <div className="col-md-6">
-                    <img src={selectedImage} alt="Product" className="img-fluid rounded shadow-sm mb-3" />
+                    <img src={selectedImage ? productImage(product) : `http://localhost:3001/public/emptyImage.jpg`} alt="Product" className="img-fluid rounded shadow-sm mb-3" />
                     <div className="d-flex gap-2">
                         {/* {product.images.map((img, index) => (
                             <img

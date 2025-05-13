@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import useOrderApi from "../../hooks/useOrderApi";
 
 const order = {
   _id: "661355d9348306f65b8c9e21",
@@ -59,11 +61,31 @@ const order = {
 };
 
 
-const AdminOrders = () => {
-  if (!order) return <div className="container mt-5">Loading...</div>;
+const AdminOrdersDetails = (props) => {
+  const orderObj = useParams();
+  const [order1, setOrder1] = useState();
+
+  const { getOrderById } = useOrderApi();
+  
+  const navigate = useNavigate();
+
+  const handleGoBack = () => navigate(-1);
+
+  const fetchOrder = async () => {
+    const result = await getOrderById(orderObj.id);
+    console.log(result);
+    setOrder1(result);
+  }
+
+  useEffect(() => {
+    fetchOrder();
+  }, []);
 
   return (
     <div className="container mt-5">
+      <button className="btn btn-outline-secondary mb-3 mt-0" onClick={handleGoBack}>
+        ← Go Back
+      </button>
       <h2>Order Details - {order.orderNumber}</h2>
 
       <div className="row mt-4">
@@ -71,10 +93,10 @@ const AdminOrders = () => {
         <div className="col-md-6 mb-3">
           <h5>Customer Info</h5>
           <ul className="list-group">
-            <li className="list-group-item"><strong>Name:</strong> {order.user?.fullname}</li>
-            <li className="list-group-item"><strong>Payment Method:</strong> {order.paymentMethod}</li>
-            <li className="list-group-item"><strong>Payment Status:</strong> {order.paymentStatus}</li>
-            <li className="list-group-item"><strong>Transaction ID:</strong> {order.paymentInfo.transactionId}</li>
+            <li className="list-group-item"><strong>Name:</strong> {order1?.user?.fullname}</li>
+            <li className="list-group-item"><strong>Payment Method:</strong> {order1?.paymentMethod}</li>
+            <li className="list-group-item"><strong>Payment Status:</strong> {order1?.paymentStatus}</li>
+            <li className="list-group-item"><strong>Transaction ID:</strong> {order1?.paymentInfo.transactionId}</li>
           </ul>
         </div>
 
@@ -82,10 +104,10 @@ const AdminOrders = () => {
         <div className="col-md-6 mb-3">
           <h5>Shipping Info</h5>
           <ul className="list-group">
-            <li className="list-group-item"><strong>Address:</strong> {`${order.shippingAddress.street}, ${order.shippingAddress.city}, ${order.shippingAddress.state}, ${order.shippingAddress.zipCode}, ${order.shippingAddress.country}`}</li>
-            <li className="list-group-item"><strong>Shipping Method:</strong> {order.shippingMethod}</li>
-            <li className="list-group-item"><strong>Shipping Cost:</strong> ${order.shippingCost.toFixed(2)}</li>
-            <li className="list-group-item"><strong>Tracking Number:</strong> {order.trackingNumber || "Not assigned"}</li>
+            <li className="list-group-item"><strong>Address:</strong> {`${order1?.shippingAddress.street}, ${order1?.shippingAddress.city}, ${order1?.shippingAddress.state}, ${order1?.shippingAddress.zipCode}, ${order1?.shippingAddress.country}`}</li>
+            <li className="list-group-item"><strong>Shipping Method:</strong> {order1?.shippingMethod}</li>
+            <li className="list-group-item"><strong>Shipping Cost:</strong> ${order1?.shippingCost.toFixed(2)}</li>
+            <li className="list-group-item"><strong>Tracking Number:</strong> {order1?.trackingNumber || "Not assigned"}</li>
           </ul>
         </div>
       </div>
@@ -103,7 +125,7 @@ const AdminOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {order.items.map((item, idx) => (
+            {order1?.items.map((item, idx) => (
               <tr key={idx}>
                 <td>{item.productId.name || item.productId}</td>
                 <td>{item.quantity}</td>
@@ -119,10 +141,10 @@ const AdminOrders = () => {
       <div className="d-flex justify-content-end mt-3">
         <div className="w-50">
           <ul className="list-group">
-            <li className="list-group-item"><strong>Subtotal:</strong> ${(order.totalPrice - order.discount).toFixed(2)}</li>
-            <li className="list-group-item"><strong>Discount:</strong> ${order.discount}</li>
-            <li className="list-group-item"><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</li>
-            <li className="list-group-item"><strong>Promo Code:</strong> {order.promoCode || "None"}</li>
+            <li className="list-group-item"><strong>Subtotal:</strong> ${(order1?.totalPrice - order1?.discount).toFixed(2)}</li>
+            <li className="list-group-item"><strong>Discount:</strong> ${order1?.discount}</li>
+            <li className="list-group-item"><strong>Total:</strong> ${order1?.totalPrice.toFixed(2)}</li>
+            <li className="list-group-item"><strong>Promo Code:</strong> {order1?.promoCode || "None"}</li>
           </ul>
         </div>
       </div>
@@ -133,7 +155,7 @@ const AdminOrders = () => {
         <div className="d-flex align-items-center gap-3">
           <select
             className="form-select w-auto"
-            value={order.status}
+            value={order1?.status}
             onChange={(e) => {
               // handleUpdateStatus(order._id, e.target.value);
             }}
@@ -153,7 +175,7 @@ const AdminOrders = () => {
       <div className="mt-4">
         <h5>Status History</h5>
         <ul className="list-group">
-          {order.history.map((entry, idx) => (
+          {order1?.history.map((entry, idx) => (
             <li key={idx} className="list-group-item d-flex justify-content-between">
               <span>{entry.status}</span>
               <span>{new Date(entry.timestamp).toLocaleString()}</span>
@@ -164,4 +186,4 @@ const AdminOrders = () => {
     </div>
   );
 }
-export default AdminOrders;
+export default AdminOrdersDetails;
