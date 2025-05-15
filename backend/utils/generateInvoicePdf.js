@@ -1,8 +1,11 @@
+import PDFDocument from 'pdfkit';
+import fs, { WriteStream } from 'fs';
 
 export const generateInvoicePdf = (order, filePath) => {
     
     const doc = new PDFDocument();
-    doc.pipe(fs.createWriteStream(filePath));
+    const writeStream = fs.createWriteStream(filePath);
+    doc.pipe(writeStream);
   
     doc.fontSize(20).text(`Invoice: ${order.orderNumber}`, { align: 'center' });
     doc.moveDown();
@@ -40,6 +43,7 @@ export const generateInvoicePdf = (order, filePath) => {
     doc.text(`Payment Date: ${new Date(order.paymentInfo.paymentDate).toLocaleDateString()}`);
   
     doc.end();
+
   };
 
   

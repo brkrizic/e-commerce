@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../model/Order.js';
-import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
 import { generateInvoicePdf } from '../utils/generateInvoicePdf.js';
