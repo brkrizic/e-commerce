@@ -3,9 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate, useParams } from 'react-router';
 import HomeService from '../../api/PublicService';
 import { productImage } from '../../components/constants/imageUrl';
+import useCartApi from '../../hooks/useCartApi';
 
 const ProductDetailScreen = () => {
     const productObj = useParams();
+
+    const { addCartItem } = useCartApi();
 
     const [selectedImage, setSelectedImage] = useState("");
     const [quantity, setQuantity] = useState(1);
@@ -51,8 +54,9 @@ const ProductDetailScreen = () => {
     //     { id: 4, name: "Noise-Canceling Earbuds", price: 149.99, image: "https://via.placeholder.com/150" },
     // ];
 
-    const handleAddToCart = () => {
-        alert(`Added ${quantity} x "${product.name}" to cart.`);
+    const handleAddToCart = async () => {
+        const result = await addCartItem(productObj.id, quantity);
+        return result;
     };
 
     return (
@@ -99,7 +103,7 @@ const ProductDetailScreen = () => {
                             min="1"
                             max={product?.stock}
                             value={quantity}
-                            onChange={(e) => setQuantity(Math.min(Math.max(1, e.target.value), product?.stock) || "")}
+                            onChange={(e) => setQuantity(e.target.value)}
                         />
                         <button
                             className="btn btn-success"

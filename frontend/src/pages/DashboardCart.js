@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import useCartApi from "../hooks/useCartApi";
 
 const TAX_RATE = 0.1; // 10% tax
 
@@ -20,6 +21,20 @@ const DashboardCart = () => {
             image: "https://via.placeholder.com/80"
         }
     ]);
+
+    const [cart, setCart] = useState('');
+
+    const { getCart } = useCartApi();
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            const result = await getCart();
+            console.log(result);
+
+            setCartItems(result.data.items);
+        }
+        fetchCart();
+    }, []);
 
     const updateQuantity = (id, quantity) => {
         if (quantity < 1) return;

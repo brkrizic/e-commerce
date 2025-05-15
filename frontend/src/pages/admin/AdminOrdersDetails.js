@@ -73,7 +73,6 @@ const AdminOrdersDetails = (props) => {
 
   const fetchOrder = async () => {
     const result = await getOrderById(orderObj.id);
-    console.log(result);
     setOrder1(result);
   }
 

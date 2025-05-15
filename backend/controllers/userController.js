@@ -1,4 +1,4 @@
-import User from '../model/User.js';
+import User from '../model/UserModel.js';
 import bcrypt from 'bcryptjs';
 import 'dotenv/config';
 import asyncHandler from 'express-async-handler';
@@ -6,10 +6,9 @@ import generateToken from '../utils/generateToken.js';
 import { getTokenFromHeader } from '../utils/getTokenFromHeader.js';
 import { verifyToken } from '../utils/verifyToken.js';
 import { logUserActivity } from '../utils/logUserActivity.js';
+import UserEntity from '../classes/UserEntity.js';
 
 const pepper = process.env.PEPPER;
-
-
 // @desc Login user
 // @route POST /api/v1/users/register
 // @access Public
@@ -24,17 +23,17 @@ export const registerUserCtrl = asyncHandler(async (req, res) => {
     } 
     
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await UserEntity.findByEmail(email);
         if(existingUser){
             return res.status(400).json({
                 success: false,
                 message: 'User with this email already exists!',
             })
         }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password + pepper, salt);
 
-        const newUser = new User({ fullname, email, password: hashedPassword, isAdmin});
+        const newUser = await UserEntity.create({
+            fullname, email, password, isAdmin
+        })
         await newUser.save();
 
         return res.status(201).json({
@@ -51,7 +50,7 @@ export const registerUserCtrl = asyncHandler(async (req, res) => {
         console.error(error);
         throw new Error(`Internal server error. Please try again later.`);
     }
-})
+});
 
 // @desc Login user
 // @route POST /api/v1/users/login
@@ -67,16 +66,15 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
     }
 
     try {
-        const existingEmail = await User.findOne({ email });
-
-        if(!existingEmail){
+        const foundUser = await UserEntity.findByEmail(email);
+        if(!foundUser){
             return res.status(400).json({
                 success: false,
                 message: 'User does not exist!'
             });
         }
         
-        const comparedPassword = await bcrypt.compare(password + pepper, existingEmail.password);
+        const comparedPassword = foundUser.comparePassword(password);
 
         if(!comparedPassword){
             return res.status(400).json({
@@ -85,9 +83,9 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
             });
         }
 
-        await logUserActivity('user_login', existingEmail?.id, 'success', { ip: req.ip, device: req.get('User-Agent')});
+        await logUserActivity('user_login', foundUser?.id, 'success', { ip: req.ip, device: req.get('User-Agent')});
 
-        const token = generateToken(existingEmail?.id);
+        const token = generateToken(foundUser?.id);
 
         res.cookie('authToken', token, { 
             httpOnly: true, 
@@ -99,13 +97,7 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'User successfully logged in!',
-            user: {
-                id: existingEmail._id,
-                fullname: existingEmail.fullname,
-                email: existingEmail.email,
-                itemForSale: existingEmail.itemsForSale,
-                isAdmin: existingEmail.isAdmin
-            },
+            foundUser
         });
     } catch (error) {
         console.error(error);
@@ -142,10 +134,9 @@ export const getUserProfileCtrl = asyncHandler(async (req, res) => {
     if (!userId) {
         return res.status(401).json({ message: "Expired or missing token" });
     }
-    const user = await User.findById(userId);
 
     try {
-        const user = await User.findById(userId);
+        const user = await UserEntity.findById(userId);
 
         // If no user is found, return 404 Not Found
         if (!user) {
@@ -155,15 +146,7 @@ export const getUserProfileCtrl = asyncHandler(async (req, res) => {
         // Send user profile data
         res.status(200).json({
             message: "Success",
-            user: {
-                id: user._id,
-                fullname: user.fullname,
-                email: user.email,
-                products: user.products,
-                conversation: user.conversation,
-                isAdmin: user.isAdmin,
-                createdAt: user.createdAt,
-            },
+            user
         });
     } catch (error) {
         console.error("Profile Fetch Error:", error);
@@ -175,11 +158,11 @@ export const getUserProfileCtrl = asyncHandler(async (req, res) => {
 // @route GET /api/v1/users
 // @access ADMIN
 export const getAllUsersCtrl = asyncHandler(async (req, res) => {
-    const users = await User.find();
+    const users = await UserEntity.findAll();
 
     return res.json({
         success: true,
-        users
+        users: users._doc
     })
 })
 
@@ -196,7 +179,7 @@ export const getUserByIdCtrl = asyncHandler(async (req, res) => {
         })
     }
 
-    const user = await User.findById(userId);
+    const user = await UserEntity.findById(userId);
 
     if(!user) {
         return res.json({
@@ -225,7 +208,7 @@ export const deleteUserCtrl = asyncHandler(async(req, res) => {
         })
     }
 
-    await User.deleteOne({ _id: userId});
+    await UserEntity.delete(userId);
 
     return res.json({
         success: true,

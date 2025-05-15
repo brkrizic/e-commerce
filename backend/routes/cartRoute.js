@@ -1,11 +1,13 @@
 import express from 'express';
-import { addToCart, clearCart, removeFromCart } from '../controllers/cartController';
-import { isLoggedIn } from '../middlewares/isLoggedIn';
+import { isLoggedIn } from '../middlewares/isLoggedIn.js';
+import { addCartCtrl, clearCartCtrl, getCartCtrl, removeCartItemCtrl, updateCartItemCtrl } from '../controllers/cartController.js';
 
 const cartRoutes = express.Router();
 
-cartRoutes.post('/api/v1/cart', isLoggedIn, addToCart);
-cartRoutes.put('/api/v1/cart/:id', isLoggedIn, removeFromCart);
-cartRoutes.post('/api/v1/cart/:id', isLoggedIn, clearCart);
+cartRoutes.get('/', isLoggedIn, getCartCtrl);
+cartRoutes.put('/add', isLoggedIn, addCartCtrl);
+cartRoutes.put('/update', isLoggedIn, updateCartItemCtrl);
+cartRoutes.delete('/remove/:productId', isLoggedIn, removeCartItemCtrl);
+cartRoutes.delete('/clear', isLoggedIn, clearCartCtrl);
 
 export default cartRoutes;

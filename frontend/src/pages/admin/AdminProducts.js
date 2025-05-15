@@ -9,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import TableComponent from "../../components/TableComponent";
 import BsActionButton from "../../components/BsActionButton";
+import { useCallback } from "react";
+import { useMemo } from "react";
 
 const AdminProducts = () => {
     const [page, setPage] = useState(1);
@@ -23,7 +25,7 @@ const AdminProducts = () => {
     const [imageFile, setImageFile] = useState('');
     const [notification, setNotification] = useState(null);
 
-    const isAllSelected = products.length > 0 && selectedKey.length === products.length;
+    const isAllSelected = useMemo(() => products.length > 0 && selectedKey.length === products.length, [products, selectedKey]);
 
     const fetchProducts = async (currentPage) => {
         const response = await HomeService.getAllProducts(currentPage);
@@ -31,7 +33,7 @@ const AdminProducts = () => {
         setTotalPages(Math.ceil(response.total / 10));
     }
 
-    const handleCreateProduct = async (formData) => {
+    const handleCreateProduct = useCallback(async (formData) => {
  
          const response = await AdminService.createProduct(formData);
          console.log(response);
@@ -50,9 +52,9 @@ const AdminProducts = () => {
                  type: "error"
              })
         }
-     };
+     }, []);
 
-    const handleUpdateProduct = async (selectedProduct, id) => {
+    const handleUpdateProduct = useCallback(async (selectedProduct, id) => {
 
         try {
             const response = await AdminService.updateProduct(selectedProduct, id);
@@ -76,9 +78,9 @@ const AdminProducts = () => {
                 type: "error"
             });
         } 
-    };
+    }, []);
 
-    const handleDeleteProduct = async () => {
+    const handleDeleteProduct = useCallback(async () => {
         const response = await AdminService.deleteProduct(selectedKey[0]);
         if(response?.success){
             setNotification({
@@ -94,31 +96,31 @@ const AdminProducts = () => {
                 type: "error"
             });
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchProducts(page);
-    }, [page, notification]);
+    }, [page, handleCreateProduct, handleUpdateProduct, handleDeleteProduct]);
 
     useEffect(() => {
         console.log(selectedKey);
     }, [selectedKey]);
 
-    const toggleSelectedKey = (id) => {
+    const toggleSelectedKey = useCallback((id) => {
         if (selectedKey.includes(id)) {
             setSelectedKey(selectedKey.filter((key) => key !== id));
         } else {
             setSelectedKey([...selectedKey, id]);
         }
-    };
+    }, [selectedKey]);
 
-    const toggleSelectAll = () => {
+    const toggleSelectAll = useCallback(() => {
         if(isAllSelected){
             setSelectedKey([])
         } else {
             setSelectedKey(products.map((product) => product._id));
         }
-    };
+    }, [products, isAllSelected]);
 
 
     return(
@@ -154,7 +156,6 @@ const AdminProducts = () => {
             <TableComponent
                 data={products}
                 columns={[
-                    { label: "#", key: "index", format: (_, row, i) => i + 1 },
                     { label: "ID", key: "_id" },
                     { label: "Name", key: "name" },
                     { label: "Description", key: "description" },
@@ -173,7 +174,7 @@ const AdminProducts = () => {
                 Previous
             </ButtonBs>
             <span className="text-sm font-medium">Page {page} of {totalPages - 1}</span>
-            <ButtonBs onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))} disabled={page === totalPages}>
+            <ButtonBs onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))} disabled={page === totalPages - 1}>
                 Next
             </ButtonBs>
         </div>
@@ -182,7 +183,6 @@ const AdminProducts = () => {
                     id="viewModal"
                     modalTitle="View Product"
                     modalText="Are you sure you want to create a new product?"
-                    onConfirm={() => console.log("Create product logic")}
                     type="viewProduct"
                     selectedKey={selectedKey}
                     name={name}
@@ -197,7 +197,6 @@ const AdminProducts = () => {
                     onCreate={handleCreateProduct}
                     modalTitle="Create Product"
                     modalText="Are you sure you want to create a new product?"
-                    onConfirm={() => console.log("Create product logic")}
                     type="createProduct"
                     name={name}
                     description={description}
@@ -210,7 +209,6 @@ const AdminProducts = () => {
                     onUpdate={handleUpdateProduct}
                     modalTitle="Update Product"
                     modalText="Are you sure you want to update the selected product(s)?"
-                    onConfirm={() => console.log("Update product logic")}
                     type="updateProduct"
                     selectedKey={selectedKey}
                     name={name}
@@ -224,7 +222,6 @@ const AdminProducts = () => {
                     onDelete={handleDeleteProduct}
                     modalTitle="Delete Product"
                     modalText="Are you sure you want to delete the selected product(s)?"
-                    onConfirm={() => console.log("Delete product logic")}
                     type="deleteProduct"
                     selectedKey={selectedKey}
                     name={name}

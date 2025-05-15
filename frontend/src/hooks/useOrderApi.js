@@ -7,13 +7,14 @@ const useOrderApi = () => {
     const getAllOrders = async () => {
         try {
             const response = await axios.get(`${baseUrl}`, { withCredentials: true });
-            if(response.status === 200){
-                return response.data;
+            if (response.status === 200) {
+                return response.data;  // Return the data when successful
             } else {
-                console.log("Failed to fetch orders");
+                throw new Error("Failed to fetch orders, unexpected status code: " + response.status); // Handle non-200 responses
             }
         } catch (error) {
-            console.log(error);
+            console.error("Error fetching orders:", error);
+            throw new Error("Error fetching orders: " + error.message);  // Propagate the error
         }
     };
 
@@ -21,13 +22,12 @@ const useOrderApi = () => {
         try {
             const response = await axios.get(`${baseUrl}/${id}`, { withCredentials: true });
             if(response.status === 200){
-                console.log(response.data);
                 return response.data;
             } else {
-                console.log("Failed to fetch order");
+                throw new Error("Failed to fetch order");
             }
         } catch (error) {
-            console.log(error);
+            throw new Error(error);
         }
     }
 

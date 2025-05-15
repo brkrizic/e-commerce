@@ -28,13 +28,15 @@ function App() {
 
   const isAdmin = useSelector((state) => state?.auth?.user?.isAdmin) || false;
   const isSigner = useSelector((state) => state?.auth?.user?.isSigner) || false;
+
+  const user = useSelector((state) => state?.auth?.user);
   //const isAdminTest = true;
 
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     dispatch(checkAuthStatus());
-  }, [dispatch]);
+  }, [user, isLoggedIn, isAdmin, isSigner]);
 
 
   return (
@@ -54,7 +56,7 @@ function App() {
                 <Route path="/dashboard/home" element={<HomeScreen />}></Route>
                 <Route path="/dashboard/product/:id" element={<ProductDetailScreen />}></Route>
                 <Route path="/dashboard/cart" element={<DashboardCart />}/>
-                <Route path="/dashboard/profile" element={<DashboardProfile />}/>
+                <Route path="/dashboard/profile" element={<DashboardProfile user={user} />}/>
                 <Route path="/dashboard/products" element={<DashboardProducts />}/>
                 <Route path="/dashboard/orders" element={<DashboardOrders />}/>
                 <Route path="/dashboard/settings" element={<DashboardSettings />}/>

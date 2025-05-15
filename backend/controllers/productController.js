@@ -1,6 +1,6 @@
 import Category from '../model/Category.js';
 import Product from '../model/Product.js';
-import User from '../model/User.js';
+import UserModel from '../model/UserModel.js';
 import asyncHandler from 'express-async-handler';
 import fs from 'fs';
 import path from 'path';

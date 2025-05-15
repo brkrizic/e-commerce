@@ -16,17 +16,11 @@ const CartItemSchema = new Schema({
     priceAtPurchase: {
         type: Number,
         required: true
-    },
-    selectedOptions: {
-        // for variants like size, color etc
-        type: Map,
-        of: String,
-        default: {}
     }
 }, { _id: false }); // No separate ID for items
 
 const CartSchema = new Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,

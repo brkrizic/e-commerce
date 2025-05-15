@@ -1,4 +1,4 @@
-import User from "../model/User.js";
+import UserModel from "../model/UserModel.js";
 import { verifyToken } from "../utils/verifyToken.js";
 
 export const verifyIsAdmin = async (req, res, next) => {
@@ -10,7 +10,7 @@ export const verifyIsAdmin = async (req, res, next) => {
 
         const decodedUser = verifyToken(token);
 
-        const user = await User.findById(decodedUser.id);
+        const user = await UserModel.findById(decodedUser.id);
         console.log(user);
 
         if (!user) {
