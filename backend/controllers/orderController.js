@@ -3,6 +3,8 @@ import Order from '../model/Order.js';
 import fs from 'fs';
 import path from 'path';
 import { generateInvoicePdf } from '../utils/generateInvoicePdf.js';
+import Stripe from 'stripe';
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 
 //🔹 Download order
@@ -154,4 +156,32 @@ export const deleteOrder = asyncHandler(async (req, res) => {
   }
 
   res.json({ success: true, message: 'Order deleted' });
+});
+
+// 🔹 Payment Intent
+// route POST /create-payment-intent
+export const createPaymentIntent = asyncHandler(async (req, res) => {
+    try {
+      const { amount, payment_method } = req.body;
+
+      if (!amount || !payment_method) {
+        return res.status(400).json({ error: 'Amount and payment method are required' });
+      }
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: parseInt(amount), // in cents: $5.00 => 500
+        currency: 'usd',
+        payment_method,
+        confirm: true, // confirm immediately
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: 'never'
+        }
+      });
+
+      res.status(200).json({ success: true, paymentIntent });
+    } catch (error) {
+      console.error('Stripe error:', error);
+      res.status(400).json({ error: error.message });
+    }
 });
