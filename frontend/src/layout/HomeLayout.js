@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 const HomeLayout = () => {
   return (
@@ -36,6 +37,8 @@ const HomeLayout = () => {
                   </NavLink>
                 </li>
               </ul>
+
+              <LanguageSwitcher />
             </div>
           </div>
         </nav>

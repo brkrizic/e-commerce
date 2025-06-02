@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate, useParams } from 'react-router';
 import HomeService from '../../api/PublicService';
@@ -27,9 +27,11 @@ const ProductDetailScreen = () => {
         setSelectedImage(data?.product?.image)
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         window.scrollTo(0, 0);
+    }, []);
 
+    useEffect(() => {
         fetchData();
     }, []);
 

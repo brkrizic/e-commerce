@@ -1,0 +1,11 @@
+{
+    "welcome": "Welcome",
+    "home_title": "Home Page",
+    "login": "Login",
+    "logout": "Logout",
+    "cart": "Your Cart",
+    "products": "Products",
+    "add_to_cart": "Add to Cart",
+    "checkout": "Checkout",
+    "language": "Language"
+}

@@ -12,6 +12,7 @@ import fs from 'fs';
 import path from 'path';
 import orderRoutes from '../routes/orderRoute.js';
 import cartRoutes from '../routes/cartRoute.js';
+import { fileURLToPath } from 'url';
 
 dbConnect();
 const app = express();
@@ -39,6 +40,11 @@ console.log('Public folder path:', path.resolve('public'));
 
 
 app.use(cookieParser());
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/locales', express.static(path.resolve(__dirname, '../locales')));
 
 app.get("/home", (req, res) => {
     res.status(200).send("<h1>Hello world</h1>");

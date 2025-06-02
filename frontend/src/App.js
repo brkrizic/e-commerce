@@ -34,9 +34,9 @@ function App() {
 
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(checkAuthStatus());
-  }, [user, isLoggedIn, isAdmin, isSigner]);
+  }, [isLoggedIn]);
 
 
   return (

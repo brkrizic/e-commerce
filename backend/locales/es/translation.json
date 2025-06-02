@@ -1,0 +1,13 @@
+{
+    "welcome": "Bienvenido",
+    "home_title": "Página principal",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "cart": "Tu carrito",
+    "products": "Productos",
+    "add_to_cart": "Añadir al carrito",
+    "checkout": "Pagar",
+    "language": "Idioma",
+    "emailAddress": "Dirección de correo electrónico"
+    
+}

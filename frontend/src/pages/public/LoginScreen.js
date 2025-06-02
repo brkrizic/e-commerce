@@ -5,10 +5,13 @@ import { Navigate, useNavigate } from "react-router";
 import ButtonBs from "../../components/ButtonComponent";
 import LabelInputBs from "../../components/LabelInputComponent";
 import TitleBs from "../../components/TitleComponent";
+import { useTranslation } from "react-i18next";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState(localStorage.getItem("justRegisteredUser") || "");
     const [password, setPassword] = useState("");
+
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
 
@@ -29,7 +32,7 @@ const LoginScreen = () => {
 
     return (
         <div className="container">
-        <TitleBs type={'h2'}>Login</TitleBs>
+        <TitleBs type={'h2'}>{t('login')}</TitleBs>
         
         <form onSubmit={handleSubmit} className="mb-3">
             <LabelInputBs 
@@ -54,7 +57,7 @@ const LoginScreen = () => {
             {/* <button type="submit" className="btn btn-primary w-100" style={{ backgroundColor: "black"}} disabled={loading}>
                 {loading ? "Logging in..." : "Login"}
             </button> */}
-            <ButtonBs type={"submit"} disabled={loading}>{loading ? "Logging in..." : "Login"}</ButtonBs>
+            <ButtonBs type={"submit"} disabled={loading}>{loading ? "Logging in..." : t('login')}</ButtonBs>
         </form>
 
         {error && <p style={{ color: "red" }}>{error.message}</p>}

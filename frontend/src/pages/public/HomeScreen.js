@@ -6,6 +6,7 @@ import ButtonBs from "../../components/ButtonComponent";
 import { productImage } from "../../components/constants/imageUrl";
 import { Outlet, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const HomeScreen = () => {
     const [products, setProducts] = useState([]);
@@ -13,6 +14,8 @@ const HomeScreen = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
 
@@ -59,7 +62,7 @@ const HomeScreen = () => {
 
     return (
         <div className="container mx-auto max-w-3xl">
-            <TitleBs type={'h1'}>Home</TitleBs>
+            <TitleBs type={'h1'}>{t('home_title')}</TitleBs>
             
             {/* Search Bar */}
             <div className="mb-4 flex gap-2">

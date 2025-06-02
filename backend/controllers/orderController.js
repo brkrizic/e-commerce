@@ -8,37 +8,34 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 
 //🔹 Download order
-export const downloadOrderPdf = asyncHandler(async(req, res) => {
+export const downloadOrderPdf = asyncHandler(async (req, res) => {
   const { orderNumber } = req.params;
-
-  const order = await Order.findOne({ orderNumber });
-  if (!order) {
-    res.status(404);
-    throw new Error('Order not found');
-  }
-
-  //const rawOrderNumber = orderNumber.replace('ORD-', '');
-
-  //console.log(orderNumber);
+  const speed = parseFloat(req.query.speed) || 100; // KB/s
 
   const fileName = `${orderNumber}.pdf`;
   const filePath = path.join('invoices', fileName);
 
-  console.log(filePath);
-
-  // Check if file exists
   if (!fs.existsSync(filePath)) {
     res.status(404);
     throw new Error('Invoice file not found');
   }
 
-  res.download(filePath, fileName, (err) => {
-    if(err){
-      res.status(500).json({
-        message: 'Failed to download Invoice'
-      });
-    }
-  })
+  const stat = fs.statSync(filePath);
+  const totalSize = stat.size;
+
+  res.setHeader('Content-Length', totalSize);
+  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+  res.setHeader('Content-Type', 'application/pdf');
+
+  const stream = fs.createReadStream(filePath, { highWaterMark: 1 }); // 1 KB chunks
+
+  for await (const chunk of stream) {
+    res.write(chunk);
+    // wait based on speed (KB/s): 1 KB / speed seconds
+    const delayMs = 1000 / speed;
+    await new Promise(r => setTimeout(r, delayMs));
+  }
+  res.end();
 });
 
 //🔹 Sign order

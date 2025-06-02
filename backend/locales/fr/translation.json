@@ -1,0 +1,12 @@
+{
+    "welcome": "Bienvenue",
+    "home_title": "Page d'accueil",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "cart": "Votre panier",
+    "products": "Produits",
+    "add_to_cart": "Ajouter au panier",
+    "checkout": "Paiement",
+    "language": "Langue",
+    "emailAddress": "Adresse courriel"
+}
